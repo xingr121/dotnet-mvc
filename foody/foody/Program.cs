@@ -14,7 +14,11 @@ modelBuilder.Services.AddDatabaseDeveloperPageExceptionFilter();
 modelBuilder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 modelBuilder.Services.AddControllersWithViews();
-
+modelBuilder.Services.AddMemoryCache();
+modelBuilder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set your timeout here
+});
 var app = modelBuilder.Build();
 
 // Configure the HTTP request pipeline.
@@ -35,7 +39,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
-
+app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Ingredient}/{action=Index}/{id?}");
